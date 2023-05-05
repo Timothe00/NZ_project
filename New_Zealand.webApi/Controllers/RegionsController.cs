@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using New_Zealand.webApi.Data;
 using New_Zealand.webApi.Models.Domain;
@@ -20,10 +21,10 @@ namespace New_Zealand.webApi.Controllers
 
 
         [HttpGet]
-        public IActionResult GetAllRegions()
+        public async Task<IActionResult> GetAllRegions()
         {
             //get data from database - Domain models
-            var regionsDomain = _dbContext.Regionss.ToList();
+            var regionsDomain = await _dbContext.Regionss.ToListAsync();
 
             //Map domain Models to DTOs
             var regionsDto = new List<RegionDto>();
@@ -45,12 +46,12 @@ namespace New_Zealand.webApi.Controllers
         //get region by id
         [HttpGet]
         [Route("{id:Guid}")]
-        public IActionResult GetOneByIdRegions([FromRoute] Guid id)
+        public async Task<IActionResult> GetOneByIdRegions([FromRoute] Guid id)
         {
 
             //with link relation
             //get region domain model from database
-            var regionsDomain = _dbContext.Regionss.FirstOrDefault(x => x.Id == id);
+            var regionsDomain = await _dbContext.Regionss.FirstOrDefaultAsync(x => x.Id == id);
 
             if (regionsDomain == null)
             {
@@ -80,7 +81,7 @@ namespace New_Zealand.webApi.Controllers
 
         //creation a region with a post metod
         [HttpPost]
-        public IActionResult CreateRegion([FromBody] AddRegionRequestDto addRegionRequestDto) 
+        public async Task<IActionResult> CreateRegion([FromBody] AddRegionRequestDto addRegionRequestDto) 
         {
             //map or Convert DTO to Domain Model
             var regionDomainModel = new Regions
@@ -92,8 +93,8 @@ namespace New_Zealand.webApi.Controllers
 
             //Use Domain Model to create region
 
-            _dbContext.Regionss.Add(regionDomainModel);
-            _dbContext.SaveChanges();
+           await _dbContext.Regionss.AddAsync(regionDomainModel);
+           await _dbContext.SaveChangesAsync();
 
             //Map Domain model back to DTO
             var regionDto = new RegionDto
@@ -109,10 +110,10 @@ namespace New_Zealand.webApi.Controllers
 
         [HttpPut]
         [Route("{id:Guid}")]
-        public IActionResult UpdateRegion([FromRoute] Guid id, [FromBody] UpdateRegionRequestDto updateRegionRequestDto)
+        public async Task<IActionResult> UpdateRegion([FromRoute] Guid id, [FromBody] UpdateRegionRequestDto updateRegionRequestDto)
         {
             //check if region exist
-            var regionDomainModel = _dbContext.Regionss.FirstOrDefault(x => x.Id == id);
+            var regionDomainModel = await _dbContext.Regionss.FirstOrDefaultAsync(x => x.Id == id);
 
             if (regionDomainModel == null)
             {
@@ -123,7 +124,7 @@ namespace New_Zealand.webApi.Controllers
             regionDomainModel.Code = updateRegionRequestDto.Code;
             regionDomainModel.Name = updateRegionRequestDto.Name;
             regionDomainModel.RegionImageUrl = updateRegionRequestDto.RegionImageUrl;
-            _dbContext.SaveChanges();
+            await _dbContext.SaveChangesAsync();
 
             //convert domain model to DTO
             var regionDto = new RegionDto
@@ -141,9 +142,9 @@ namespace New_Zealand.webApi.Controllers
         //region delete method
         [HttpDelete]
         [Route("{id:Guid}")]
-        public IActionResult DeleteRegion([FromRoute] Guid id)
+        public async Task<IActionResult> DeleteRegion([FromRoute] Guid id)
         {
-            var regionDomainModel = _dbContext.Regionss.FirstOrDefault(x=>x.Id == id);
+            var regionDomainModel = await _dbContext.Regionss.FirstOrDefaultAsync(x=>x.Id == id);
 
             if(regionDomainModel == null)
             {
@@ -151,7 +152,7 @@ namespace New_Zealand.webApi.Controllers
             }
             //delete region
             _dbContext.Regionss.Remove(regionDomainModel);
-            _dbContext.SaveChanges();
+            await _dbContext.SaveChangesAsync();
 
 
 
