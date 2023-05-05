@@ -15,10 +15,6 @@ builder.Services.AddSwaggerGen();
 //injection de notre dbContext
 builder.Services.AddDbContext<New_ZealandDbContext>(options =>
 options.UseSqlServer(builder.Configuration.GetConnectionString("LinkCs")));
-/*builder.Services.AddDbContext<New_ZealandDbContext>(Option => {
-    Option.UseSqlServer(builder.Configuration.GetConnectionString("LinkCs"));
-});*/
-
 
 var app = builder.Build();
 
