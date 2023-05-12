@@ -2,6 +2,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using New_Zealand.webApi.Data;
+using New_Zealand.webApi.Mappings;
+using New_Zealand.webApi.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,6 +17,13 @@ builder.Services.AddSwaggerGen();
 //injection de notre dbContext
 builder.Services.AddDbContext<New_ZealandDbContext>(options =>
 options.UseSqlServer(builder.Configuration.GetConnectionString("LinkCs")));
+
+//injection de IRegionRepository et SQLRegionRepository
+builder.Services.AddScoped<IRegionRepository, SQLRegionRepository>();
+builder.Services.AddScoped<IWalksRepository, SQLWalksRepository>();
+
+//injection de automapper
+builder.Services.AddAutoMapper(typeof(AutoMapperProfiles));
 
 var app = builder.Build();
 

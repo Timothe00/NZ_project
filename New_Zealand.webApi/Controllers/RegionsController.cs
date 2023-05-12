@@ -1,10 +1,8 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
-using New_Zealand.webApi.Data;
 using New_Zealand.webApi.Models.Domain;
 using New_Zealand.webApi.Models.DTO;
+using New_Zealand.webApi.Repositories;
 
 namespace New_Zealand.webApi.Controllers
 {
@@ -13,10 +11,14 @@ namespace New_Zealand.webApi.Controllers
     public class RegionsController : ControllerBase
     {
 
-        private readonly New_ZealandDbContext _dbContext;
-        public RegionsController(New_ZealandDbContext dbContext)
+
+        private readonly IRegionRepository regionRepository;
+        private readonly IMapper mapper;
+        //injection de IRegionRepository dans le constructeur
+        public RegionsController(IRegionRepository regionRepository, IMapper mapper)
         {
-            this._dbContext = dbContext;
+            this.regionRepository = regionRepository;
+            this.mapper = mapper;
         }
 
 
@@ -24,22 +26,22 @@ namespace New_Zealand.webApi.Controllers
         public async Task<IActionResult> GetAllRegions()
         {
             //get data from database - Domain models
-            var regionsDomain = await _dbContext.Regionss.ToListAsync();
-
+            var regionsDomain = await regionRepository.GetAllRegionsAsync();
             //Map domain Models to DTOs
-            var regionsDto = new List<RegionDto>();
-            foreach (var regionDomain in regionsDomain)
-            {
-                regionsDto.Add(new RegionDto()
-                {
-                    Id= regionDomain.Id,
-                    Code= regionDomain.Code,
-                    Name= regionDomain.Name,
-                    RegionImageUrl= regionDomain.RegionImageUrl
-                });
-            }
+            return Ok(mapper.Map<List<RegionDto>>(regionsDomain));
+            /*            var regionsDto = new List<RegionDto>();
+                        foreach (var regionDomain in regionsDomain)
+                        {
+                            regionsDto.Add(new RegionDto()
+                            {
+                                Id= regionDomain.Id,
+                                Code= regionDomain.Code,
+                                Name= regionDomain.Name,
+                                RegionImageUrl= regionDomain.RegionImageUrl
+                            });
+                        }*/
             //return dtos
-            return Ok(regionsDto);
+
         }
 
 
@@ -51,22 +53,14 @@ namespace New_Zealand.webApi.Controllers
 
             //with link relation
             //get region domain model from database
-            var regionsDomain = await _dbContext.Regionss.FirstOrDefaultAsync(x => x.Id == id);
+            var regionsDomainModel = await regionRepository.GetOneByIdRegionsAsync(id);
 
-            if (regionsDomain == null)
+            if (regionsDomainModel == null)
             {
                 return NotFound();
             }
-
-            var regionsDto = new RegionDto
-            {
-                Id = regionsDomain.Id,
-                Code = regionsDomain.Code,
-                Name = regionsDomain.Name,
-                RegionImageUrl = regionsDomain.RegionImageUrl
-            };
-
-            return Ok(regionsDomain);
+            //return DTO back to client
+            return Ok(mapper.Map<RegionDto>(regionsDomainModel));
 
             /* var OneRegion = _dbContext.Regionss.Find(id);
                 if (OneRegion == null)
@@ -83,27 +77,13 @@ namespace New_Zealand.webApi.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateRegion([FromBody] AddRegionRequestDto addRegionRequestDto) 
         {
+
             //map or Convert DTO to Domain Model
-            var regionDomainModel = new Regions
-            {
-                Code = addRegionRequestDto.Code,
-                Name = addRegionRequestDto.Name,
-                RegionImageUrl = addRegionRequestDto.RegionImageUrl
-            };
+            var regionsDomainModel = mapper.Map<Regions>(addRegionRequestDto);
 
-            //Use Domain Model to create region
-
-           await _dbContext.Regionss.AddAsync(regionDomainModel);
-           await _dbContext.SaveChangesAsync();
-
+            regionsDomainModel = await regionRepository.CreateRegionAsync(regionsDomainModel);
             //Map Domain model back to DTO
-            var regionDto = new RegionDto
-            {
-                Id = regionDomainModel.Id,
-                Code = addRegionRequestDto.Code,
-                Name = addRegionRequestDto.Name,
-                RegionImageUrl = addRegionRequestDto.RegionImageUrl
-            };
+            var regionDto = mapper.Map<RegionDto>(regionsDomainModel);
             return CreatedAtAction(nameof(GetOneByIdRegions), new { id = regionDto.Id }, regionDto);
 
         }
@@ -112,30 +92,19 @@ namespace New_Zealand.webApi.Controllers
         [Route("{id:Guid}")]
         public async Task<IActionResult> UpdateRegion([FromRoute] Guid id, [FromBody] UpdateRegionRequestDto updateRegionRequestDto)
         {
+            //map DTO to domain model
+            var regionDomainModel = mapper.Map<Regions>(updateRegionRequestDto);
             //check if region exist
-            var regionDomainModel = await _dbContext.Regionss.FirstOrDefaultAsync(x => x.Id == id);
+            regionDomainModel = await regionRepository.UpdateRegionAsync(id, regionDomainModel);
+            
+            //var regionDomainModel = await _dbContext.Regionss.FirstOrDefaultAsync(x => x.Id == id);
 
             if (regionDomainModel == null)
             {
                 return NotFound();
             }
-
-            //map DTO to domain model
-            regionDomainModel.Code = updateRegionRequestDto.Code;
-            regionDomainModel.Name = updateRegionRequestDto.Name;
-            regionDomainModel.RegionImageUrl = updateRegionRequestDto.RegionImageUrl;
-            await _dbContext.SaveChangesAsync();
-
             //convert domain model to DTO
-            var regionDto = new RegionDto
-            {
-                Id = regionDomainModel.Id,
-                Code = regionDomainModel.Code,
-                Name = regionDomainModel.Name,
-                RegionImageUrl = regionDomainModel.RegionImageUrl
-            };
-
-            return Ok(regionDto);
+            return Ok(mapper.Map<RegionDto>(regionDomainModel));
         }
 
 
@@ -144,29 +113,14 @@ namespace New_Zealand.webApi.Controllers
         [Route("{id:Guid}")]
         public async Task<IActionResult> DeleteRegion([FromRoute] Guid id)
         {
-            var regionDomainModel = await _dbContext.Regionss.FirstOrDefaultAsync(x=>x.Id == id);
+            var regionDomainModel = await regionRepository.DeleteRegionAsync(id);
 
-            if(regionDomainModel == null)
+            if (regionDomainModel == null)
             {
                 return NotFound();
             }
-            //delete region
-            _dbContext.Regionss.Remove(regionDomainModel);
-            await _dbContext.SaveChangesAsync();
-
-
-
             //return deleted Region back
-            //map domain model to DTO
-            var regionDto = new RegionDto
-            {
-                Id = regionDomainModel.Id,
-                Code = regionDomainModel.Code,
-                Name = regionDomainModel.Name,
-                RegionImageUrl = regionDomainModel.RegionImageUrl
-            };
-
-            return Ok(regionDto);
+            return Ok(mapper.Map<RegionDto>(regionDomainModel));
         }
     }
 }
