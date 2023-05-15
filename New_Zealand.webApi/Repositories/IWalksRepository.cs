@@ -9,5 +9,6 @@ namespace New_Zealand.webApi.Repositories
         Task<Walk> CreateWalksAsync(Walk walk);
         Task<List<Walk>>GetWalksAsync();
         Task<Walk?> GetOneWalksAsync(Guid id);
+        Task<Walk?> UpdateWalksAsync(Guid id, Walk walk);
     }
 }

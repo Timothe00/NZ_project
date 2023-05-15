@@ -52,5 +52,20 @@ namespace New_Zealand.webApi.Controllers
             return Ok(mapper.Map<WalkDto>(walksDomainModel));
         }
 
+        [HttpPut]
+        [Route("{id:Guid}")]
+        public async Task<IActionResult>UpdateWalks([FromBody] Guid id, [FromBody] UpdateRegionRequestDto updateWalksRequestDto)
+        {
+            var walksDomainModel = mapper.Map<Walk>(updateWalksRequestDto);
+            walksDomainModel= await walksRepository.UpdateWalksAsync(id, walksDomainModel);
+
+            if(walksDomainModel == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(mapper.Map<WalkDto>(walksDomainModel));
+        }
+
     }
 }
