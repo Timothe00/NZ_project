@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using New_Zealand.webApi.CustomeActionFilters;
 using New_Zealand.webApi.Models.Domain;
 using New_Zealand.webApi.Models.DTO;
 using New_Zealand.webApi.Repositories;
@@ -75,6 +76,7 @@ namespace New_Zealand.webApi.Controllers
 
         //creation a region with a post metod
         [HttpPost]
+        [ValidateModel]
         public async Task<IActionResult> CreateRegion([FromBody] AddRegionRequestDto addRegionRequestDto) 
         {
 
@@ -90,6 +92,7 @@ namespace New_Zealand.webApi.Controllers
 
         [HttpPut]
         [Route("{id:Guid}")]
+        [ValidateModel]
         public async Task<IActionResult> UpdateRegion([FromRoute] Guid id, [FromBody] UpdateRegionRequestDto updateRegionRequestDto)
         {
             //map DTO to domain model

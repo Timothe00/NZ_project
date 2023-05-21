@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using New_Zealand.webApi.CustomeActionFilters;
 using New_Zealand.webApi.Data;
 using New_Zealand.webApi.Models.Domain;
 using New_Zealand.webApi.Models.DTO;
@@ -43,6 +44,7 @@ namespace New_Zealand.webApi.Controllers
         }
 
         [HttpPost]
+        [ValidateModel]
         public async Task<IActionResult> CreateWalks([FromBody] AddWalksRequestDto addWalksRequestDto)
         {
             //map or Convert DTO to Domain Model
@@ -54,7 +56,8 @@ namespace New_Zealand.webApi.Controllers
 
         [HttpPut]
         [Route("{id:Guid}")]
-        public async Task<IActionResult>UpdateWalks([FromBody] Guid id, [FromBody] UpdateRegionRequestDto updateWalksRequestDto)
+        [ValidateModel]
+        public async Task<IActionResult>UpdateWalks([FromRoute] Guid id, [FromBody] UpdateRegionRequestDto updateWalksRequestDto)
         {
             var walksDomainModel = mapper.Map<Walk>(updateWalksRequestDto);
             walksDomainModel= await walksRepository.UpdateWalksAsync(id, walksDomainModel);

@@ -1,32 +1,26 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\INFI-STG7\\Desktop\\UdemyProject\\New_Zealand\\New_Zealand.webApi\\New_Zealand.webApi.csproj": {}
+    "C:\\Users\\yaofr\\Bureau\\NZ_project\\New_Zealand.webApi\\New_Zealand.webApi.csproj": {}
   },
   "projects": {
-    "C:\\Users\\INFI-STG7\\Desktop\\UdemyProject\\New_Zealand\\New_Zealand.webApi\\New_Zealand.webApi.csproj": {
+    "C:\\Users\\yaofr\\Bureau\\NZ_project\\New_Zealand.webApi\\New_Zealand.webApi.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\INFI-STG7\\Desktop\\UdemyProject\\New_Zealand\\New_Zealand.webApi\\New_Zealand.webApi.csproj",
+        "projectUniqueName": "C:\\Users\\yaofr\\Bureau\\NZ_project\\New_Zealand.webApi\\New_Zealand.webApi.csproj",
         "projectName": "New_Zealand.webApi",
-        "projectPath": "C:\\Users\\INFI-STG7\\Desktop\\UdemyProject\\New_Zealand\\New_Zealand.webApi\\New_Zealand.webApi.csproj",
-        "packagesPath": "C:\\Users\\INFI-STG7\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\INFI-STG7\\Desktop\\UdemyProject\\New_Zealand\\New_Zealand.webApi\\obj\\",
+        "projectPath": "C:\\Users\\yaofr\\Bureau\\NZ_project\\New_Zealand.webApi\\New_Zealand.webApi.csproj",
+        "packagesPath": "C:\\Users\\yaofr\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\yaofr\\Bureau\\NZ_project\\New_Zealand.webApi\\obj\\",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-        ],
         "configFilePaths": [
-          "C:\\Users\\INFI-STG7\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+          "C:\\Users\\yaofr\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net7.0"
         ],
         "sources": {
-          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Program Files\\dotnet\\library-packs": {},
+          "C:\\Program Files\\dotnet\\sdk\\7.0.302\\Sdks\\Microsoft.NET.Sdk.Web\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -91,7 +85,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.101\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.302\\RuntimeIdentifierGraph.json"
         }
       }
     }
