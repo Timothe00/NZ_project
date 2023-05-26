@@ -22,19 +22,17 @@ namespace New_Zealand.webApi.Repositories
             return walk;
         }
 
-        public async Task<List<Walk>> GetWalksAsync()
+        public async Task<List<Walk>> GetWalksAsync(string? filterOn = null, string? filterQuery = null)
         {
-            return await _dbContext.Walks
-                .Include("Difficulty")
-                .Include(x=>x.Regions)
-                .ToListAsync();
+            var walk= _dbContext.Walks.Include("Difficulty").Include("Regions").AsQueryable();
+            return ;
         }
 
         public async Task<Walk?> GetOneWalksAsync(Guid id)
         {
             return await _dbContext.Walks
                 .Include("Difficulty")
-                .Include(x => x.Regions)
+                .Include("Regions")
                 .FirstOrDefaultAsync(x=>x.Id == id);
         }
 
@@ -56,7 +54,6 @@ namespace New_Zealand.webApi.Repositories
             existingWalk.RegionId = walk.RegionId;
 
             await _dbContext.SaveChangesAsync();
-
 
             return existingWalk;
         }

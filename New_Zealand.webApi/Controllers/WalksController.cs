@@ -24,7 +24,7 @@ namespace New_Zealand.webApi.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllWalks()
+        public async Task<IActionResult> GetAllWalks([FromQuery] string? filterOn, [FromQuery] string? filterQuery)
         {
             var walkDomainModel = await walksRepository.GetWalksAsync();
             return Ok(mapper.Map<List<WalkDto>>(walkDomainModel));

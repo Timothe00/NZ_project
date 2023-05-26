@@ -7,7 +7,7 @@ namespace New_Zealand.webApi.Repositories
     public interface IWalksRepository
     {
         Task<Walk> CreateWalksAsync(Walk walk);
-        Task<List<Walk>>GetWalksAsync();
+        Task<List<Walk>>GetWalksAsync(string? filterOn=null, string? filterQuery=null);
         Task<Walk?> GetOneWalksAsync(Guid id);
         Task<Walk?> UpdateWalksAsync(Guid id, Walk walk);
     }
