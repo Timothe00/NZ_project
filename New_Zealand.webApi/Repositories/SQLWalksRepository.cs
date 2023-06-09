@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using New_Zealand.webApi.Data;
 using New_Zealand.webApi.Models.Domain;
 using New_Zealand.webApi.Models.DTO;
+using System;
 
 namespace New_Zealand.webApi.Repositories
 {
@@ -22,10 +23,36 @@ namespace New_Zealand.webApi.Repositories
             return walk;
         }
 
-        public async Task<List<Walk>> GetWalksAsync(string? filterOn = null, string? filterQuery = null)
+        public async Task<List<Walk>> GetWalksAsync(string? filterOn = null, string? filterQuery = null,
+            string? sortBy = null, bool isAscending = true, int pageNumber = 1, int pageSize = 1000)
         {
             var walk= _dbContext.Walks.Include("Difficulty").Include("Regions").AsQueryable();
-            return ;
+
+            //filtre(string? filterOn = null, string? filterQuery = null)
+            if (string.IsNullOrWhiteSpace(filterOn)==false&&string.IsNullOrWhiteSpace(filterQuery)==false )
+            {
+                if(filterOn.Equals("Name", StringComparison.OrdinalIgnoreCase))
+                {
+                    walk = walk.Where(x => x.Name.Contains(filterQuery));
+                }
+            }
+
+
+            //tri
+
+            if (string.IsNullOrWhiteSpace(sortBy) == false)
+            {
+                if(sortBy.Equals("Name", StringComparison.OrdinalIgnoreCase))
+                {
+                    walk= isAscending?walk.OrderBy(x=>x.LengthInKm):walk.OrderByDescending(x=>x.LengthInKm);
+                }
+            }
+
+
+            // pagination(int pageNumber = 1, int pageSize = 1000)
+
+            var SkipResult = (pageNumber - 1) * pageSize;
+            return await walk.Skip(SkipResult).Take(pageSize).ToListAsync();
         }
 
         public async Task<Walk?> GetOneWalksAsync(Guid id)

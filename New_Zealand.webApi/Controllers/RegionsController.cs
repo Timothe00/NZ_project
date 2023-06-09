@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using New_Zealand.webApi.CustomeActionFilters;
 using New_Zealand.webApi.Models.Domain;
@@ -9,6 +10,7 @@ namespace New_Zealand.webApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class RegionsController : ControllerBase
     {
 

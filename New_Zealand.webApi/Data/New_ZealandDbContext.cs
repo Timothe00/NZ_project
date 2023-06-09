@@ -8,7 +8,7 @@ namespace New_Zealand.webApi.Data
 
 
 
-        public New_ZealandDbContext(DbContextOptions dbContextOptions):base(dbContextOptions)
+        public New_ZealandDbContext(DbContextOptions<New_ZealandDbContext> dbContextOptions):base(dbContextOptions)
         {
 
         }
